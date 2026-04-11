@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Опрос: Романтика в книгах и кино</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f7f3f9;
+        color: #444;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        max-width: 700px;
+        margin: 40px auto;
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    h1 {
+        text-align: center;
+        color: #a78bfa;
+    }
+    .question {
+        margin-bottom: 20px;
+    }
+    .question h3 {
+        margin-bottom: 10px;
+        font-size: 16px;
+    }
+    label {
+        display: block;
+        margin-bottom: 5px;
+        cursor: pointer;
+    }
+    button {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        background: #c4b5fd;
+        border: none;
+        border-radius: 10px;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    button:hover {
+        background: #a78bfa;
+    }
+    .result {
+        margin-top: 20px;
+        text-align: center;
+        font-weight: bold;
+        color: #6b7280;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📚🎬 Опрос</h1>
+
+    <form id="quizForm">
+
+        <div class="question">
+            <h3>1. Знакомы ли вы с творчеством Аси Лавринович?</h3>
+            <label><input type="radio" name="q1"> Да, читала(а)</label>
+            <label><input type="radio" name="q1"> Слышала(а)</label>
+            <label><input type="radio" name="q1"> Нет</label>
+        </div>
+
+        <div class="question">
+            <h3>2. Что вам ближе?</h3>
+            <label><input type="radio" name="q2"> Книги</label>
+            <label><input type="radio" name="q2"> Фильмы</label>
+            <label><input type="radio" name="q2"> И то, и другое</label>
+        </div>
+
+        <div class="question">
+            <h3>3. Смотрели «Юные сердца»?</h3>
+            <label><input type="radio" name="q3"> Да, понравилось</label>
+            <label><input type="radio" name="q3"> Не очень</label>
+            <label><input type="radio" name="q3"> Нет</label>
+        </div>
+
+        <div class="question">
+            <h3>4. Смотрели «Назови меня своим именем»?</h3>
+            <label><input type="radio" name="q4"> Да, люблю</label>
+            <label><input type="radio" name="q4"> Не зашло</label>
+            <label><input type="radio" name="q4"> Нет</label>
+        </div>
+
+        <div class="question">
+            <h3>5. Что важнее?</h3>
+            <label><input type="radio" name="q5"> Сюжет</label>
+            <label><input type="radio" name="q5"> Атмосфера</label>
+            <label><input type="radio" name="q5"> Эмоции</label>
+        </div>
+
+        <div class="question">
+            <h3>6. Какой финал нравится?</h3>
+            <label><input type="radio" name="q6"> Счастливый</label>
+            <label><input type="radio" name="q6"> Открытый</label>
+            <label><input type="radio" name="q6"> Грустный</label>
+        </div>
+
+        <button type="button" onclick="submitQuiz()">Отправить</button>
+
+    </form>
+
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+function submitQuiz() {
+    let form = document.getElementById('quizForm');
+    let answered = 0;
+
+    for (let i = 1; i <= 6; i++) {
+        let radios = form["q" + i];
+        for (let r of radios) {
+            if (r.checked) {
+                answered++;
+                break;
+            }
+        }
+    }
+
+    let result = document.getElementById('result');
+
+    if (answered < 6) {
+        result.innerHTML = "Пожалуйста, ответьте на все вопросы 💜";
+    } else {
+        result.innerHTML = "Спасибо за прохождение опроса ✨";
+    }
+}
+</script>
+
+</body>
+</html>
