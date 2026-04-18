@@ -2,141 +2,173 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Опрос: Романтика в книгах и кино</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ultimate Media Guide</title>
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background: #f7f3f9;
-        color: #444;
-        margin: 0;
-        padding: 0;
-    }
-    .container {
-        max-width: 700px;
-        margin: 40px auto;
-        background: #ffffff;
-        padding: 30px;
-        border-radius: 15px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-    }
-    h1 {
-        text-align: center;
-        color: #a78bfa;
-    }
-    .question {
-        margin-bottom: 20px;
-    }
-    .question h3 {
-        margin-bottom: 10px;
-        font-size: 16px;
-    }
-    label {
-        display: block;
-        margin-bottom: 5px;
-        cursor: pointer;
-    }
-    button {
-        display: block;
-        width: 100%;
-        padding: 12px;
-        background: #c4b5fd;
-        border: none;
-        border-radius: 10px;
-        color: white;
-        font-size: 16px;
-        cursor: pointer;
-        transition: 0.3s;
-    }
-    button:hover {
-        background: #a78bfa;
-    }
-    .result {
-        margin-top: 20px;
-        text-align: center;
-        font-weight: bold;
-        color: #6b7280;
-    }
+    :root { --main: #a78bfa; --bg: #f8fafc; --text: #1e293b; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; }
+    .container { max-width: 650px; margin: 20px auto; background: #fff; padding: 25px; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
+    
+    .page { display: none; animation: fadeIn 0.5s; }
+    .active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Поиск */
+    .search-box { position: relative; margin: 20px 0; }
+    input[type="text"] { width: 100%; padding: 15px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 16px; outline: none; transition: 0.3s; box-sizing: border-box; }
+    input[type="text"]:focus { border-color: var(--main); box-shadow: 0 0 10px rgba(167, 139, 250, 0.2); }
+    #searchResults { background: white; border-radius: 12px; margin-top: 5px; max-height: 300px; overflow-y: auto; border: 1px solid #e2e8f0; display: none; }
+    .search-item { padding: 12px; border-bottom: 1px solid #f1f5f9; cursor: pointer; font-size: 14px; }
+    .search-item:hover { background: #f3f0ff; }
+
+    /* Опрос */
+    .question { margin-bottom: 25px; background: #fdfaff; padding: 15px; border-radius: 15px; border: 1px solid #f3f0ff; }
+    .question h3 { margin: 0 0 12px 0; font-size: 17px; color: #5b21b6; }
+    label { display: block; padding: 10px; margin: 5px 0; background: white; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: 0.2s; }
+    label:hover { border-color: var(--main); background: #f5f3ff; }
+    input[type="radio"] { margin-right: 10px; accent-color: var(--main); }
+
+    button { width: 100%; padding: 16px; background: var(--main); border: none; border-radius: 12px; color: white; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+    button:hover { background: #8b5cf6; transform: translateY(-2px); }
+
+    .result-card { text-align: center; padding: 20px; border: 2px solid #ddd6fe; border-radius: 20px; background: #faf9ff; }
+    .rec-title { font-size: 24px; font-weight: 800; color: #7c3aed; margin-bottom: 10px; }
 </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>📚🎬 Опрос</h1>
 
-    <form id="quizForm">
-
-        <div class="question">
-            <h3>1. Знакомы ли вы с творчеством Аси Лавринович?</h3>
-            <label><input type="radio" name="q1"> Да, читала(а)</label>
-            <label><input type="radio" name="q1"> Слышала(а)</label>
-            <label><input type="radio" name="q1"> Нет</label>
+    <!-- СТРАНИЦА 1: ГИГАНТСКИЙ ПОИСК -->
+    <div id="page1" class="page active">
+        <h2 style="text-align:center">🔍 Глобальный поиск</h2>
+        <p style="text-align:center; color: #64748b;">Найди любую из 100,000+ книг или фильмов</p>
+        
+        <div class="search-box">
+            <input type="text" id="wikiSearch" placeholder="Начни писать: Война и мир, Человек-паук..." oninput="searchGlobal()">
+            <div id="searchResults"></div>
         </div>
 
-        <div class="question">
-            <h3>2. Что вам ближе?</h3>
-            <label><input type="radio" name="q2"> Книги</label>
-            <label><input type="radio" name="q2"> Фильмы</label>
-            <label><input type="radio" name="q2"> И то, и другое</label>
+        <button onclick="showPage('page2')">Начать подбор рекомендаций ➜</button>
+    </div>
+
+    <!-- СТРАНИЦА 2: БОЛЬШОЙ ОПРОС -->
+    <div id="page2" class="page">
+        <h2>🎨 Твои предпочтения</h2>
+        <form id="megaQuiz">
+            <div class="question">
+                <h3>1. Какой жанр тебе сейчас ближе?</h3>
+                <label><input type="radio" name="genre" value="fantasy" required> Фэнтези и супергерои</label>
+                <label><input type="radio" name="genre" value="classic"> Классика и драма</label>
+                <label><input type="radio" name="genre" value="romance"> Романтика и чувства</label>
+                <label><input type="radio" name="genre" value="sci-fi"> Научная фантастика</label>
+            </div>
+
+            <div class="question">
+                <h3>2. Какое время действия нравится?</h3>
+                <label><input type="radio" name="time" value="past"> Прошлое / История</label>
+                <label><input type="radio" name="time" value="present"> Современность</label>
+                <label><input type="radio" name="time" value="future"> Будущее</label>
+            </div>
+
+            <div class="question">
+                <h3>3. Насколько сложным должно быть произведение?</h3>
+                <label><input type="radio" name="deep" value="easy"> Легкое, чтобы отдохнуть</label>
+                <label><input type="radio" name="deep" value="hard"> Глубокое, чтобы подумать</label>
+            </div>
+
+            <div class="question">
+                <h3>4. Что ты хочешь получить в конце?</h3>
+                <label><input type="radio" name="end" value="happy"> Счастливый финал</label>
+                <label><input type="radio" name="end" value="sad"> Стекло (грустный финал)</label>
+                <label><input type="radio" name="end" value="think"> Открытый финал</label>
+            </div>
+
+            <button type="button" onclick="generateRecommendation()">Узнать результат ✨</button>
+        </form>
+    </div>
+
+    <!-- СТРАНИЦА 3: РЕЗУЛЬТАТ -->
+    <div id="page3" class="page">
+        <h2>Твой идеальный выбор:</h2>
+        <div id="resultBox" class="result-card">
+            <div class="rec-title" id="recTitle"></div>
+            <p id="recDesc"></p>
+            <div style="color: #f59e0b; font-size: 20px;">⭐⭐⭐⭐⭐</div>
         </div>
+        <button onclick="location.reload()">Пройти еще раз</button>
+    </div>
 
-        <div class="question">
-            <h3>3. Смотрели «Юные сердца»?</h3>
-            <label><input type="radio" name="q3"> Да, понравилось</label>
-            <label><input type="radio" name="q3"> Не очень</label>
-            <label><input type="radio" name="q3"> Нет</label>
-        </div>
-
-        <div class="question">
-            <h3>4. Смотрели «Назови меня своим именем»?</h3>
-            <label><input type="radio" name="q4"> Да, люблю</label>
-            <label><input type="radio" name="q4"> Не зашло</label>
-            <label><input type="radio" name="q4"> Нет</label>
-        </div>
-
-        <div class="question">
-            <h3>5. Что важнее?</h3>
-            <label><input type="radio" name="q5"> Сюжет</label>
-            <label><input type="radio" name="q5"> Атмосфера</label>
-            <label><input type="radio" name="q5"> Эмоции</label>
-        </div>
-
-        <div class="question">
-            <h3>6. Какой финал нравится?</h3>
-            <label><input type="radio" name="q6"> Счастливый</label>
-            <label><input type="radio" name="q6"> Открытый</label>
-            <label><input type="radio" name="q6"> Грустный</label>
-        </div>
-
-        <button type="button" onclick="submitQuiz()">Отправить</button>
-
-    </form>
-
-    <div class="result" id="result"></div>
 </div>
 
 <script>
-function submitQuiz() {
-    let form = document.getElementById('quizForm');
-    let answered = 0;
+    function showPage(id) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        window.scrollTo(0,0);
+    }
 
-    for (let i = 1; i <= 6; i++) {
-        let radios = form["q" + i];
-        for (let r of radios) {
-            if (r.checked) {
-                answered++;
-                break;
+    // ГЛОБАЛЬНЫЙ ПОИСК ЧЕРЕЗ WIKIPEDIA (Миллионы сущностей)
+    async function searchGlobal() {
+        const query = document.getElementById('wikiSearch').value;
+        const resDiv = document.getElementById('searchResults');
+        
+        if (query.length < 3) { resDiv.style.display = 'none'; return; }
+
+        try {
+            const url = `https://wikipedia.org{encodeURIComponent(query)}`;
+            const response = await fetch(url);
+            const data = await response.json();
+
+            resDiv.innerHTML = '';
+            if (data[1].length > 0) {
+                resDiv.style.display = 'block';
+                data[1].forEach((item, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'search-item';
+                    div.innerHTML = `<strong>${item}</strong><br><small style="color: #888">${data[2][index].substring(0, 100)}...</small>`;
+                    div.onclick = () => {
+                        alert("Вы выбрали: " + item);
+                        resDiv.style.display = 'none';
+                    };
+                    resDiv.appendChild(div);
+                });
             }
+        } catch (e) { console.log("Ошибка поиска"); }
+    }
+
+    // УМНАЯ ЛОГИКА РЕКОМЕНДАЦИЙ
+    function generateRecommendation() {
+        const f = document.forms.megaQuiz;
+        if(!f.checkValidity()) { alert("Пожалуйста, ответьте на вопросы!"); return; }
+
+        const genre = f.genre.value;
+        const deep = f.deep.value;
+        const end = f.end.value;
+
+        let title = "";
+        let desc = "";
+
+        if (genre === 'fantasy') {
+            if (deep === 'easy') { title = "Гарри Поттер"; desc = "Магический мир, который лечит душу."; }
+            else { title = "Властелин Колец"; desc = "Эпическая сага о борьбе добра и зла."; }
+        } 
+        else if (genre === 'classic') {
+            if (end === 'sad') { title = "Мцыри"; desc = "Одиночество, жажда свободы и трагичный финал."; }
+            else { title = "Война и мир"; desc = "Грандиозная классика о жизни, любви и поиске смысла."; }
         }
-    }
+        else if (genre === 'romance') {
+            if (deep === 'easy') { title = "Книги Аси Лавринович"; desc = "Самые добрые истории о первой влюбленности."; }
+            else { title = "Гордость и предубеждение"; desc = "Классика романтизма с глубокими персонажами."; }
+        }
+        else {
+            title = "Интерстеллар"; desc = "Если любишь науку, космос и сильные эмоции.";
+        }
 
-    let result = document.getElementById('result');
-
-    if (answered < 6) {
-        result.innerHTML = "Пожалуйста, ответьте на все вопросы 💜";
-    } else {
-        result.innerHTML = "Спасибо за прохождение опроса ✨";
+        document.getElementById('recTitle').innerText = title;
+        document.getElementById('recDesc').innerText = desc;
+        showPage('page3');
     }
-}
 </script>
 
 </body>
